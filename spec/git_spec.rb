@@ -35,13 +35,13 @@ describe 'git' do
     describe 'deploy:update' do
       it 'updates' do
         cli_execute 'deploy:update'
-        config.should have_run('cd /foo/bar && git fetch origin && git reset --hard origin/master')
+        config.should have_run('cd /foo/bar/current && git fetch origin && git reset --hard origin/master')
       end
     end
   end
 
   it 'has current revision' do
-    config.should_receive(:capture).with('cd /foo/bar && git rev-parse --short HEAD') { "baz\n" }
+    config.should_receive(:capture).with('cd /foo/bar/current && git rev-parse --short HEAD') { "baz\n" }
     config.current_revision.should == 'baz'
   end
 
