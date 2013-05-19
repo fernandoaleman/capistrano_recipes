@@ -11,7 +11,7 @@ For a single environment add:
 ```ruby
 require 'capistrano/recipes'
 
-use_recipes :bundler, :git
+use_recipes :bundler, :git, :rails_assets
 
 server 'Add your web server domain or ip here', :app, :web, :db, :primary => true
 
@@ -26,7 +26,7 @@ For a multistage environment add:
 ```ruby
 require 'capistrano/recipes'
 
-use_recipes :bundler, :git, :multistage
+use_recipes :bundler, :git, :multistage, :rails_assets
 
 stage :staging, :branch => :dev, :default => true do
   server 'Add your web server domain or ip here', :app, :web, :db, :primary => true
@@ -49,15 +49,16 @@ use_recipe :bundle
 
 To add multiple recipes:
 ```ruby
-use_recipes :bundle, :git, :multistage
+use_recipes :bundle, :git, :multistage, :rails_assets
 ```
 
 ## Recipes
-| Recipe       | Documentation |
-| ------------ | ------------- |
-| :bundle      | [Bundle recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Bundle) |
-| :git         | [Git recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Git) |
-| :multistage  | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
+| Recipe        | Documentation |
+| ------------  | ------------- |
+| :bundle       | [Bundle recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Bundle) |
+| :git          | [Git recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Git) |
+| :multistage   | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
+| :rails_assets | [Rails assets recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Rails-Assets) |
 
 ## Installation
 
