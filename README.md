@@ -52,6 +52,13 @@ To add multiple recipes:
 use_recipes :bundle, :git, :multistage
 ```
 
+## Recipes
+| Recipe       | Documentation |
+| ------------ | ------------- |
+| :bundle      | [Bundle recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Bundle) |
+| :git         | [Git recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Git) |
+| :multistage  | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
+
 ## Installation
 
 Add this line to your application's Gemfile:
