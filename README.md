@@ -2,25 +2,11 @@
 
 Powerful capistrano recipes to make your rails deployments fast and easy.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'capistrano_recipes'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install capistrano_recipes
-
 ## Quickstart Guide
 
 Create a file called 'Capfile' in your application's root directory.
 
-For a single stage environment add:
+For a single environment add:
 
 ```ruby
 require 'capistrano/recipes'
@@ -55,6 +41,33 @@ set :deploy_to,   "/path/to/your/app/here"
 set :repository,  "Set repository location here"
 set :domain,      "Set domain name here"
 ```
+
+To add a single recipe:
+```ruby
+use_recipe :bundle
+```
+
+To add multiple recipes:
+```ruby
+use_recipes :bundle, :git, :multistage
+```
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'capistrano_recipes'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install capistrano_recipes
+
+## Documentation
+For more detailed information, visit the [wiki](https://github.com/fernandoaleman/capistrano_recipes/wiki).
 
 ## Contributing
 
