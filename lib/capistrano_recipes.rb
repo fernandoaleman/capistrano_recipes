@@ -14,7 +14,6 @@ module CapistranoRecipes
         _cset :log_path, lambda { File.join shared_path, 'log' }
         _cset :pids_path, lambda { File.join shared_path, 'pids' }
         _cset :sockets_path, lambda { File.join shared_path, 'sockets' }
-        _cset :use_asset_pipeline, lambda{ true }
 
         set :user, 'deployer'
 
@@ -46,10 +45,6 @@ module CapistranoRecipes
 
         def using_recipe?(recipe)
           used_recipes.include?(recipe.to_sym)
-        end
-
-        def using_asset_pipeline?
-          fetch(:use_asset_pipeline)
         end
 
         def upload_template(local_file, remote_file, permissions = nil)
