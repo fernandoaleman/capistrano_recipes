@@ -1,6 +1,6 @@
 <% if using_recipe?(:unicorn) %>
 upstream unicorn_<%= application %> {
-  server unix:<%= unicorn_socket %> fail_timeout=0;
+  server unix:<%= unicorn_socket_file %> fail_timeout=0;
 }
 
 <% end %>
