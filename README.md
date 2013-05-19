@@ -60,6 +60,7 @@ use_recipes :bundle, :git, :multistage, :rails_assets
 | :multistage   | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
 | :nginx        | [Nginx](https://github.com/fernandoaleman/capistrano_recipes/wiki/Nginx) |
 | :rails_assets | [Rails assets recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Rails-Assets) |
+| :unicorn      | [Unicorn](https://github.com/fernandoaleman/capistrano_recipes/wiki/Unicorn) |
 
 ## Installation
 

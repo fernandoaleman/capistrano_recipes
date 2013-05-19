@@ -1,0 +1,47 @@
+working_directory "<%= current_path %>"
+pid "<%= unicorn_pid_file %>"
+stderr_path "<%= unicorn_log_file %>"
+stdout_path "<%= unicorn_log_file %>"
+
+# Listen on a Unix domain socket
+# Use shorter backlog for quicker failover when busy
+listen "<%= unicorn_socket_file %>", backlog: 64
+
+# Preload our app for more speed
+preload_app true
+
+# See unicorn docs for more configuration details
+worker_processes <%= unicorn_workers %>
+
+# Kill workers after <%= unicorn_workers_timeout %> seconds, instead of the default 60
+timeout <%= unicorn_workers_timeout %>
+
+before_fork do |server, worker|
+  # the following is recommended for Rails + "preload_app true"
+  # as there is no need for the master process to hold a connection
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.connection.disconnect!
+  end
+  
+  # Before forking, kill the master process that belongs to the .oldbin PID.
+  # This enables 0 downtime deploys.
+  old_pid = "<%= unicorn_pid_file %>.oldbin"
+  
+  if File.exists?(old_pid) && server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else killed it
+    end
+  end
+end
+
+after_fork do |server, worker|
+  # the following is required for Rails + "preload_app true"
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.establish_connection
+  end
+  
+  # if preload_app is true, you may also want to check and
+  # restart any other shared sockets such as Memcached
+end
