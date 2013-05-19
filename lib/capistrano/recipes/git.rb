@@ -17,9 +17,9 @@ module CapistranoRecipes
         set(:release_path)      { fetch(:current_path) }
         set(:releases_path)     { fetch(:current_path) }
         set(:current_release)   { fetch(:current_path) }
-        set(:current_revision)  { capture("cd #{deploy_to} && git rev-parse --short HEAD").strip }
-        set(:latest_revision)   { capture("cd #{deploy_to} && git rev-parse --short HEAD").strip }
-        set(:previous_revision) { capture("cd #{deploy_to} && git rev-parse --short HEAD@{1}").strip }
+        set(:current_revision)  { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
+        set(:latest_revision)   { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
+        set(:previous_revision) { capture("cd #{current_path} && git rev-parse --short HEAD@{1}").strip }
 
         set :local_branch do
           `git symbolic-ref HEAD 2> /dev/null`.strip.sub('refs/heads/', '')
@@ -45,13 +45,13 @@ module CapistranoRecipes
 
           desc 'Update the deployed code'
           task :update_code, :except => { :no_release => true } do
-            run "cd #{deploy_to} && git fetch origin && git reset --hard origin/#{branch}"
+            run "cd #{current_path} && git fetch origin && git reset --hard origin/#{branch}"
             finalize_update
           end
           
           desc 'Run migrations'
           task :migrate, :roles => :db, :only => { :primary => true } do
-            run "cd #{deploy_to} && RAILS_ENV=#{rails_env} #{rake} db:migrate"
+            run "cd #{current_path} && RAILS_ENV=#{rails_env} #{rake} db:migrate"
           end
 
           desc 'Deploy and run migrations'
@@ -70,7 +70,7 @@ module CapistranoRecipes
 
             desc 'Rewrite reflog so HEAD@{1} will continue to point to the next previous release'
             task :cleanup, :except => { :no_release => true } do
-              run "cd #{deploy_to}; git reflog delete --rewrite HEAD@{1}; git reflog delete --rewrite HEAD@{1}"
+              run "cd #{current_path}; git reflog delete --rewrite HEAD@{1}; git reflog delete --rewrite HEAD@{1}"
             end
 
             desc 'Roll back to the previously deployed version'
