@@ -99,7 +99,7 @@ module CapistranoRecipes
 
           desc 'Setup servers for deployment'
           task :setup, :except => { :no_release => true } do
-            dirs = [deploy_to, releases_path, shared_path, config_path, backup_path]
+            dirs = [deploy_to, releases_path, shared_path, config_path, backup_path, pids_path, sockets_path]
             dirs += shared_children.map { |d| File.join(shared_path, d.split('/').last) }
             run "#{try_sudo} mkdir -p #{dirs.join(' ')}"
             run "#{try_sudo} chmod g+w #{dirs.join(' ')}" if fetch(:group_writable, true)
