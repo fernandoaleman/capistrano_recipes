@@ -58,6 +58,7 @@ use_recipes :bundle, :git, :multistage, :rails_assets
 | :bundle       | [Bundle recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Bundle) |
 | :git          | [Git recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Git) |
 | :multistage   | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
+| :mysql        | [Mysql](https://github.com/fernandoaleman/capistrano_recipes/wiki/Mysql) |
 | :nginx        | [Nginx](https://github.com/fernandoaleman/capistrano_recipes/wiki/Nginx) |
 | :rails_assets | [Rails assets recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Rails-Assets) |
 | :unicorn      | [Unicorn](https://github.com/fernandoaleman/capistrano_recipes/wiki/Unicorn) |
