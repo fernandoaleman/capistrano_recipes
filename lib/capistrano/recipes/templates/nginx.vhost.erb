@@ -1,0 +1,114 @@
+<% if exists?(:domain_alias) %>
+server {
+  server_name  <%= domain_alias %>;
+  rewrite ^(.*) http://<%= domain %>$1 permanent;
+}
+
+<% end %>
+server {
+  listen <%= nginx_port %>;
+  server_name <%= domain %>;
+
+  root <%= current_path %>/public;
+  access_log <%= shared_path %>/log/access.log main;
+  error_log <%= shared_path %>/log/error.log info;
+
+  # Rewrite all the requests to the maintenance.html
+  # page if it exists in the doc root. This is for
+  # capistrano's disable web task
+  if (-f $document_root/system/maintenance.html) {
+    rewrite ^(.*)$ /system/maintenance.html last;
+    break;
+  }
+
+  location / {
+    # If the file exists as a static file, serve it directly
+    # without running all the other rewrite tests on it
+    if (-f $request_filename) {
+      break;
+    }
+
+    # Check for index.html
+    if (-f $request_filename/index.html) {
+      rewrite (.*) $1/index.html break;
+    }
+
+    # Check if .html file exists for page caching
+    if (-f $request_filename.html) {
+      rewrite (.*) $1.html break;
+    }
+  }
+
+<% if using_recipe?(:rails_assets) %>
+  # Asset pipeline
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+<% end %>
+
+  error_page 500 502 503 504 /500.html;
+  location = /500.html {
+    root <%= current_path %>/public;
+  }
+}
+<% if using_ssl? %>
+
+server {
+  listen <%= nginx_ssl_port %>;
+  server_name <%= domain %>;
+
+  root <%= current_path %>/public;
+  access_log <%= shared_path %>/log/ssl-access.log main;
+  error_log <%= shared_path %>/log/ssl-error.log info;
+
+  ssl                   on;
+  ssl_certificate       <%= File.join nginx_ssl_certs_path, nginx_ssl_cert %>;
+  ssl_certificate_key   <%= File.join nginx_ssl_private_path, nginx_ssl_key %>;
+  ssl_session_timeout   5m;
+
+
+  # Rewrite all the requests to the maintenance.html
+  # page if it exists in the doc root. This is for
+  # capistrano's disable web task
+  if (-f $document_root/system/maintenance.html) {
+    rewrite ^(.*)$ /system/maintenance.html last;
+    break;
+  }
+
+  location / {
+    # If the file exists as a static file, serve it directly
+    # without running all the other rewrite tests on it
+    if (-f $request_filename) {
+      break;
+    }
+
+    # Check for index.html
+    if (-f $request_filename/index.html) {
+      rewrite (.*) $1/index.html break;
+    }
+
+    # Check if .html file exists for page caching
+    if (-f $request_filename.html) {
+      rewrite (.*) $1.html break;
+    }
+  }
+
+<% if using_recipe?(:rails_assets) %>
+  # Asset pipeline
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+<% end %>
+
+  error_page 500 502 503 504 /500.html;
+  location = /500.html {
+    root <%= current_path %>/public;
+  }
+}
+<% end %>
