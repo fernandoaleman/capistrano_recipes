@@ -67,7 +67,7 @@ module CapistranoRecipes
 
           desc 'Symlink the database.yml file into the latest deploy'
           task :symlink, :roles => :app, :except => { :no_release => true } do
-            run "ln -nfs #{mysql_remote_config} #{release_path}/config/database.yml"
+            run "ln -nfs #{mysql_remote_config_file} #{release_path}/config/database.yml"
           end
           after 'deploy:finalize_update', 'mysql:symlink'
 
