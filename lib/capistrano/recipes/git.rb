@@ -34,6 +34,7 @@ module CapistranoRecipes
           task :cold do
             update
             migrate
+            start
           end
 
           desc 'Update the deployed code through transaction to rollback if it has errors'
