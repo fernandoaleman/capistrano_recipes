@@ -43,7 +43,7 @@ server {
     rewrite (.*) $1.html break;
   }
 
-<% if using_recipe?(:rails_assets) %>
+<% if using_recipe?(:assets) %>
   # Asset pipeline
   location ^~ /assets/ {
     gzip_static on;
@@ -107,7 +107,7 @@ server {
     rewrite (.*) $1.html break;
   }
 
-<% if using_recipe?(:rails_assets) %>
+<% if using_recipe?(:assets) %>
   # Asset pipeline
   location ^~ /assets/ {
     gzip_static on;

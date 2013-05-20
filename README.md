@@ -11,7 +11,7 @@ For a single environment add:
 ```ruby
 require 'capistrano/recipes'
 
-use_recipes :bundler, :git, :rails_assets
+use_recipes :assets, :bundler, :git
 
 server 'Add your web server domain or ip here', :app, :web, :db, :primary => true
 
@@ -26,7 +26,7 @@ For a multistage environment add:
 ```ruby
 require 'capistrano/recipes'
 
-use_recipes :bundler, :git, :multistage, :rails_assets
+use_recipes :assets, :bundler, :git, :multistage
 
 stage :staging, :branch => :dev, :default => true do
   server 'Add your web server domain or ip here', :app, :web, :db, :primary => true
@@ -49,18 +49,18 @@ use_recipe :bundle
 
 To add multiple recipes:
 ```ruby
-use_recipes :bundle, :git, :multistage, :rails_assets
+use_recipes :assets, :bundle, :git, :multistage
 ```
 
 ## Recipes
 | Recipe        | Documentation |
 | ------------  | ------------- |
+| :assets       | [Assets recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Assets) |
 | :bundle       | [Bundle recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Bundle) |
 | :git          | [Git recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Git) |
 | :multistage   | [Multistage recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Multistage) |
 | :mysql        | [Mysql](https://github.com/fernandoaleman/capistrano_recipes/wiki/Mysql) |
 | :nginx        | [Nginx](https://github.com/fernandoaleman/capistrano_recipes/wiki/Nginx) |
-| :rails_assets | [Rails assets recipe documentation](https://github.com/fernandoaleman/capistrano_recipes/wiki/Rails-Assets) |
 | :unicorn      | [Unicorn](https://github.com/fernandoaleman/capistrano_recipes/wiki/Unicorn) |
 
 ## Installation

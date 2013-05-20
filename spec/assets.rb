@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe 'rails assets' do
+describe 'assets' do
   before do
     mock_config do
-      use_recipe :rails_assets
+      use_recipe :assets
       set :application, 'foo'
       set :deploy_to, '/foo/bar'
       set :latest_release, deploy_to
