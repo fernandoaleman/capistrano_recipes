@@ -27,22 +27,20 @@ server {
     break;
   }
 
-  location / {
-    # If the file exists as a static file, serve it directly
-    # without running all the other rewrite tests on it
-    if (-f $request_filename) {
-      break;
-    }
+  # If the file exists as a static file, serve it directly
+  # without running all the other rewrite tests on it
+  if (-f $request_filename) {
+    break;
+  }
 
-    # Check for index.html
-    if (-f $request_filename/index.html) {
-      rewrite (.*) $1/index.html break;
-    }
+  # Check for index.html
+  if (-f $request_filename/index.html) {
+    rewrite (.*) $1/index.html break;
+  }
 
-    # Check if .html file exists for page caching
-    if (-f $request_filename.html) {
-      rewrite (.*) $1.html break;
-    }
+  # Check if .html file exists for page caching
+  if (-f $request_filename.html) {
+    rewrite (.*) $1.html break;
   }
 
 <% if using_recipe?(:rails_assets) %>
@@ -93,22 +91,20 @@ server {
     break;
   }
 
-  location / {
-    # If the file exists as a static file, serve it directly
-    # without running all the other rewrite tests on it
-    if (-f $request_filename) {
-      break;
-    }
+  # If the file exists as a static file, serve it directly
+  # without running all the other rewrite tests on it
+  if (-f $request_filename) {
+    break;
+  }
 
-    # Check for index.html
-    if (-f $request_filename/index.html) {
-      rewrite (.*) $1/index.html break;
-    }
+  # Check for index.html
+  if (-f $request_filename/index.html) {
+    rewrite (.*) $1/index.html break;
+  }
 
-    # Check if .html file exists for page caching
-    if (-f $request_filename.html) {
-      rewrite (.*) $1.html break;
-    }
+  # Check if .html file exists for page caching
+  if (-f $request_filename.html) {
+    rewrite (.*) $1.html break;
   }
 
 <% if using_recipe?(:rails_assets) %>
