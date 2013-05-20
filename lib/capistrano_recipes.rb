@@ -29,9 +29,9 @@ module CapistranoRecipes
           begin
             require "capistrano/recipes/#{recipe_name}"
 
-            recipe = CapistranoRecipes.const_get(recipe_name.to_s.capitalize.gsub(/_(\w)/) { $1.upcase })
-            recipe.load_into(self)
-            @used_recipes << recipe.to_s.split('::').last.downcase.to_sym
+            const_recipe = CapistranoRecipes.const_get(recipe_name.to_s.capitalize.gsub(/_(\w)/) { $1.upcase })
+            const_recipe.load_into(self)
+            @used_recipes << recipe_name.to_s.downcase.to_sym
           rescue LoadError
             abort "Did you misspell `#{recipe_name}` recipe name?"
           end
