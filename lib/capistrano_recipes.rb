@@ -5,7 +5,7 @@ module CapistranoRecipes
       configuration.load('deploy')
 
       configuration.load do
-        _cset :shared_children, %w(public/system log tmp/pids tmp/sockets)
+        _cset :shared_children, lambda { %w(public/system log tmp/pids tmp/sockets) }
         _cset(:domain) { abort "Please specify domain, set :domain, 'domain.com'"}
         _cset :config_dir, 'config'
         _cset :config_path, lambda { File.join shared_path, config_dir }
