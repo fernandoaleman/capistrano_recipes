@@ -20,16 +20,19 @@ module CapistranoRecipes
         set(:current_revision)  { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
         set(:latest_revision)   { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
         set(:previous_revision) { capture("cd #{current_path} && git rev-parse --short HEAD@{1}").strip }
-
+        
         set :local_branch do
           `git symbolic-ref HEAD 2> /dev/null`.strip.sub('refs/heads/', '')
         end
         
         after 'deploy:setup' do
-          unless remote_directory_exists?(current_path)
+          begin
             run "git clone --no-checkout #{repository} #{current_path}"
-          else
-            say "#{current_path} already exists, skipping..."
+          rescue
+            if agree?("Repo already exists. Destroy and clone again?")
+              run "#{try_sudo} rm -rf #{current_path}"
+              retry
+            end
           end
         end
         
