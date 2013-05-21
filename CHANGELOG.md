@@ -1,3 +1,7 @@
+# 1.0.5 - May 21, 2013
+- Added remote_directory_exists? and remote_file_exists? methods
+- Fixed bug to check if git repo already exists during setup in git recipe
+
 # 1.0.4 - May 21, 2013
 - Fixed bug when creating database in mysql recipe
 - Fixed bug when creating database name in mysql.yml.erb template
