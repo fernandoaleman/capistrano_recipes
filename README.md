@@ -80,6 +80,9 @@ Or install it yourself as:
 ## Documentation
 For more detailed information, visit the [wiki](https://github.com/fernandoaleman/capistrano_recipes/wiki).
 
+## Changelog
+Look at the [CHANGELOG](https://github.com/fernandoaleman/capistrano_recipes/blob/master/CHANGELOG.md) to see what's changed.
+
 ## Contributing
 
 1. Fork it
