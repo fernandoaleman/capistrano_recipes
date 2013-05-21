@@ -91,8 +91,30 @@ module CapistranoRecipes
         end
         
         def remote_directory_exists?(path)
-          invoke_command("if [[ -d #{path} ]]; then echo -n 'true'; fi") do |channel, stream, data|
-            results = (data == 'true')
+          remote_item_exists?(path, 'd')
+        end
+        
+        def remote_file_exists?(path)
+          remote_item_exists?(path, 'f')
+        end
+        
+        def remote_item_exists?(path, item)
+          results = false
+          check   = nil
+          
+          case item
+          when 'file', 'f'
+            check = 'f'
+          when 'directory', 'd'
+            check = 'd'
+          end
+          
+          unless check.nil?
+            invoke_command("if [[ -#{check} #{path} ]]; then echo -n 'true'; fi") do |channel, stream, data|
+              results = results || (data == 'true')
+            end
+          else
+            abort "No item '#{item}' option exists"
           end
           
           results
