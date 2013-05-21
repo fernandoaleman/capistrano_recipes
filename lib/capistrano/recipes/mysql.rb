@@ -50,17 +50,34 @@ module CapistranoRecipes
 
           desc 'Create mysql database'
           task :create, :roles => :db, :only => { :primary => true } do
-            sql = <<-SQL.gsub(/^ {14}/, '')
-              "CREATE DATABASE #{mysql_database};
-              GRANT ALL PRIVILEGES ON #{mysql_database}.* TO #{mysql_user}@localhost IDENTIFIED BY '#{mysql_password}';"
-            SQL
-
+            prepare_from_yaml
+            
+            db_exists = false
+            
             mysql_admin = mysql_admin_user
-
-            run "mysql --user=#{mysql_user} -p --execute=#{sql}" do |channel, stream, data|
+            pass = password_prompt "Enter database password for '#{mysql_admin}'"
+            
+            run "echo \"SHOW DATABASES\" | mysql -u #{mysql_admin} -p" do |channel, stream, data|
               if data =~ /^Enter password:/
-                pass = password_prompt "Enter database password for '#{mysql_admin}'"
                 channel.send_data "#{pass}\n"
+              end
+            
+              if data =~ /^Database/
+                db_exists = db_exists || data.include?(db_name)
+              end
+            end
+
+            if db_exists
+              say "#{db_name} already exists, skipping..."
+            else
+              sql = "CREATE DATABASE #{db_name};"\
+                    "GRANT ALL PRIVILEGES ON #{db_name}.* TO #{db_user}@localhost IDENTIFIED BY '#{db_pass}';"\
+                    "FLUSH PRIVILEGES;"
+                    
+              run "echo \"#{sql}\" | mysql -u #{mysql_admin} -p" do |channel, stream, data|
+                if data =~ /^Enter password:/
+                  channel.send_data "#{pass}\n"
+                end
               end
             end
           end

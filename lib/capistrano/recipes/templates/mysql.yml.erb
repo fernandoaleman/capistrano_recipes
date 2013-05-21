@@ -1,6 +1,6 @@
 <%= rails_env %>:
   adapter: <%= mysql_adapter %>
-  database: <%= mysql_database %>
+  database: <%= mysql_database.gsub(/-/, '_') %>
   username: <%= mysql_user %>
   password: <%= mysql_password %>
   host: <%= mysql_host %>
