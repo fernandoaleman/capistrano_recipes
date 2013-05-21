@@ -26,7 +26,11 @@ module CapistranoRecipes
         end
         
         after 'deploy:setup' do
-          run "git clone --no-checkout #{repository} #{current_path}"
+          unless remote_directory_exists?(current_path)
+            run "git clone --no-checkout #{repository} #{current_path}"
+          else
+            say "#{current_path} already exists, skipping..."
+          end
         end
         
         namespace :deploy do

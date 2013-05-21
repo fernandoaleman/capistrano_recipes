@@ -89,6 +89,14 @@ module CapistranoRecipes
           m = "\n#{message}"
           Capistrano::CLI.ui.say(m)
         end
+        
+        def remote_directory_exists?(path)
+          invoke_command("if [[ -d #{path} ]]; then echo -n 'true'; fi") do |channel, stream, data|
+            results = (data == 'true')
+          end
+          
+          results
+        end
 
         namespace :deploy do
           desc 'Deploy application'
