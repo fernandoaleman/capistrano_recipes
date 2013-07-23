@@ -56,8 +56,11 @@ module CapistranoRecipes
         # Nginx auth basic password
         _cset :nginx_auth_basic_password, lambda { password_prompt "Enter #{rails_env} auth basic password " }
         
-        # Nginx auth basic path on server
-        _cset :nginx_auth_basic_path, lambda{ "#{shared_path}/htpasswd"}
+        # Nginx htpasswd path on server
+        _cset :nginx_htpasswd_path, lambda{ "#{shared_path}/htpasswd" }
+        
+        # Nginx htpasswd file on server
+        _cset :nginx_htpasswd_file, lambda{ File.join nginx_htpasswd_path, "htpasswd" }
 
         def using_ssl?
           fetch(:use_ssl)
@@ -72,10 +75,10 @@ module CapistranoRecipes
           task :auth_basic, :roles => :web, :except => { :no_release => true } do
             htpasswd = "#{nginx_auth_basic_username}:#{%Q{#{nginx_auth_basic_password}}.crypt(%Q{#{application}})}"
             commands = []
-            commands << "mkdir -p #{nginx_auth_basic_path}"
-            commands << "if (test -f #{nginx_auth_basic_path}); then #{sudo} mv #{nginx_auth_basic_path} /tmp/htpasswd; fi"
+            commands << "mkdir -p #{nginx_htpasswd_path}"
+            commands << "if (test -f #{nginx_htpasswd_file}); then #{sudo} mv #{nginx_htpasswd_file} /tmp/htpasswd; fi"
             commands << "echo '#{htpasswd}' >> /tmp/htpasswd"
-            commands << "#{sudo} mv /tmp/htpasswd #{nginx_auth_basic_path}"
+            commands << "#{sudo} mv /tmp/htpasswd #{nginx_htpasswd_file}"
 
             run commands.join(" && ")
           end

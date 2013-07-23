@@ -21,7 +21,7 @@ server {
   
   <% if using_auth_basic? %>
   auth_basic "Restricted Access";
-	auth_basic_user_file <%= nginx_auth_basic_path %>;
+  auth_basic_user_file <%= nginx_htpasswd_file %>;
 	
   <% end %>
   # Rewrite all the requests to the maintenance.html
@@ -84,7 +84,7 @@ server {
   
   <% if using_auth_basic? %>
   auth_basic "Restricted Access";
-	auth_basic_user_file <%= nginx_auth_basic_path %>;
+  auth_basic_user_file <%= nginx_htpasswd_file %>;
 	
   <% end %>
   ssl                   on;
