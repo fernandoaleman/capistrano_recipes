@@ -46,14 +46,43 @@ module CapistranoRecipes
 
         # Nginx ssl key file
         _cset :nginx_ssl_key, lambda { "#{application}.key" }
+        
+        # Whether or not to use auth basic
+        _cset :use_auth_basic, false
+        
+        # Nginx auth basic username
+        _cset :nginx_auth_basic_username, lambda { ask "Enter #{rails_env} auth basic username " }
+        
+        # Nginx auth basic password
+        _cset :nginx_auth_basic_password, lambda { password_prompt "Enter #{rails_env} auth basic password " }
+        
+        # Nginx auth basic path on server
+        _cset :nginx_auth_basic_path, lambda{ "#{shared_path}/htpasswd"}
 
         def using_ssl?
           fetch(:use_ssl)
         end
+        
+        def using_auth_basic?
+          fetch(:use_auth_basic)
+        end
 
         namespace :nginx do
+          desc 'Add HTTP Basic Authentication'
+          task :auth_basic, :roles => :web, :except => { :no_release => true } do
+            htpasswd = "#{nginx_auth_basic_username}:#{%Q{#{nginx_auth_basic_password}}.crypt(%Q{#{application}})}"
+            commands = []
+            commands << "mkdir -p #{nginx_auth_basic_path}"
+            commands << "if (test -f #{nginx_auth_basic_path}); then #{sudo} mv #{nginx_auth_basic_path} /tmp/htpasswd; fi"
+            commands << "echo '#{htpasswd}' >> /tmp/htpasswd"
+            commands << "#{sudo} mv /tmp/htpasswd #{nginx_auth_basic_path}"
+
+            run commands.join(" && ")
+          end
+          
           desc 'Create and upload nginx vhost'
           task :setup, :roles => :web, :except => { :no_release => true } do
+            auth_basic if using_auth_basic?
             upload_template nginx_local_site_available_template, nginx_remote_site_available_file
             run "#{sudo} ln -nfs #{nginx_remote_site_available_file} #{nginx_remote_site_enabled_link}"
             restart

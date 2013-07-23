@@ -18,7 +18,12 @@ server {
   root <%= current_path %>/public;
   access_log <%= shared_path %>/log/access.log main;
   error_log <%= shared_path %>/log/error.log info;
-
+  
+  <% if using_auth_basic? %>
+  auth_basic "Restricted Access";
+	auth_basic_user_file <%= nginx_auth_basic_path %>;
+	
+  <% end %>
   # Rewrite all the requests to the maintenance.html
   # page if it exists in the doc root. This is for
   # capistrano's disable web task
@@ -76,7 +81,12 @@ server {
   root <%= current_path %>/public;
   access_log <%= shared_path %>/log/ssl-access.log main;
   error_log <%= shared_path %>/log/ssl-error.log info;
-
+  
+  <% if using_auth_basic? %>
+  auth_basic "Restricted Access";
+	auth_basic_user_file <%= nginx_auth_basic_path %>;
+	
+  <% end %>
   ssl                   on;
   ssl_certificate       <%= File.join nginx_ssl_certs_path, nginx_ssl_cert %>;
   ssl_certificate_key   <%= File.join nginx_ssl_private_path, nginx_ssl_key %>;
