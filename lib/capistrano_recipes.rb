@@ -17,6 +17,9 @@ module CapistranoRecipes
 
         set :user, 'deployer'
 
+        default_run_options[:pty]   = true
+        ssh_options[:forward_agent] = true
+
         @used_recipes = []
 
         class << self

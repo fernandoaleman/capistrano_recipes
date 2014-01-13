@@ -2,15 +2,12 @@ module CapistranoRecipes
   module Git
     def self.load_into(configuration)
       configuration.load do
-        default_run_options[:pty]   = true
-        ssh_options[:forward_agent] = true
-
         set(:repository)        { abort "Please specify repository, set :repository, 'foo'" }
-        
+
         _cset :branch,          'master'
         _cset :use_sudo,        false
         _cset :check_repo,      true
-        
+
         set :migrate_target,    :current
 
         set(:latest_release)    { fetch(:current_path) }
@@ -20,11 +17,11 @@ module CapistranoRecipes
         set(:current_revision)  { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
         set(:latest_revision)   { capture("cd #{current_path} && git rev-parse --short HEAD").strip }
         set(:previous_revision) { capture("cd #{current_path} && git rev-parse --short HEAD@{1}").strip }
-        
+
         set :local_branch do
           `git symbolic-ref HEAD 2> /dev/null`.strip.sub('refs/heads/', '')
         end
-        
+
         after 'deploy:setup' do
           begin
             run "git clone --no-checkout #{repository} #{current_path}"
@@ -35,7 +32,7 @@ module CapistranoRecipes
             end
           end
         end
-        
+
         namespace :deploy do
           desc 'Deploy and start a cold application'
           task :cold do
@@ -56,7 +53,7 @@ module CapistranoRecipes
             run "cd #{current_path} && git fetch origin && git reset --hard origin/#{branch}"
             finalize_update
           end
-          
+
           desc 'Run migrations'
           task :migrate, :roles => :db, :only => { :primary => true } do
             run "cd #{current_path} && RAILS_ENV=#{rails_env} #{rake} db:migrate"
@@ -110,12 +107,12 @@ module CapistranoRecipes
           %w[deploy deploy:cold deploy:migrations].each do |task|
             before "#{task}", "deploy:check_repo"
           end
-          
+
           task :symlink do
             # nothing
             # if task is not being used, it will not appear in `cap -T`
           end
-          
+
           task :create_symlink do
             # nothing
             # if task is not being used, it will not appear in `cap -T`
