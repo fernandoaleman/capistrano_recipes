@@ -15,10 +15,12 @@ module CapistranoRecipes
         _cset :pids_path, lambda { File.join shared_path, 'pids' }
         _cset :sockets_path, lambda { File.join shared_path, 'sockets' }
 
-        set :user, 'deployer'
+        set :user, lambda { 'deployer' }
 
         default_run_options[:pty]   = true
         ssh_options[:forward_agent] = true
+
+        set :use_sudo, false
 
         @used_recipes = []
 

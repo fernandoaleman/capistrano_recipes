@@ -5,7 +5,6 @@ module CapistranoRecipes
         set(:repository)        { abort "Please specify repository, set :repository, 'foo'" }
 
         _cset :branch,          'master'
-        _cset :use_sudo,        false
         _cset :check_repo,      true
 
         set :migrate_target,    :current
