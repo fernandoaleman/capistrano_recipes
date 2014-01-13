@@ -2,15 +2,19 @@ module CapistranoRecipes
   module Mysql
     def self.load_into(configuration)
       configuration.load do
+
+        # MySQL command
+        _cset :mysql_command, lambda { 'mysqld' }
+
         # MySQL admin user with access to create databases and grant permissions
         _cset :mysql_admin_user, lambda { ask "Enter #{rails_env} database username with access to create database" }
 
         # Application database adapter
         _cset :mysql_adapter, lambda { 'mysql2' }
-        
+
         # Application database name
         _cset :mysql_database, lambda { "#{application}_#{rails_env}" }
-        
+
         # Application database user
         _cset :mysql_user, lambda { ask "Enter #{rails_env} database username" }
 
@@ -51,17 +55,17 @@ module CapistranoRecipes
           desc 'Create mysql database'
           task :create, :roles => :db, :only => { :primary => true } do
             prepare_from_yaml
-            
+
             db_exists = false
-            
+
             mysql_admin = mysql_admin_user
             pass = password_prompt "Enter database password for '#{mysql_admin}'"
-            
-            run "echo \"SHOW DATABASES\" | mysql -u #{mysql_admin} -p" do |channel, stream, data|
+
+            run "echo \"SHOW DATABASES\" | mysql -h #{mysql_host} -u #{mysql_admin} -p" do |channel, stream, data|
               if data =~ /^Enter password:/
                 channel.send_data "#{pass}\n"
               end
-            
+
               if data =~ /^Database/
                 db_exists = db_exists || data.include?(db_name)
               end
@@ -73,8 +77,8 @@ module CapistranoRecipes
               sql = "CREATE DATABASE #{db_name};"\
                     "GRANT ALL PRIVILEGES ON #{db_name}.* TO #{db_user}@localhost IDENTIFIED BY '#{db_pass}';"\
                     "FLUSH PRIVILEGES;"
-                    
-              run "echo \"#{sql}\" | mysql -u #{mysql_admin} -p" do |channel, stream, data|
+
+              run "echo \"#{sql}\" | mysql -h #{mysql_host} -u #{mysql_admin} -p" do |channel, stream, data|
                 if data =~ /^Enter password:/
                   channel.send_data "#{pass}\n"
                 end
@@ -124,7 +128,7 @@ module CapistranoRecipes
           %w[start stop restart status].each do |command|
             desc "#{command.capitalize} mysql"
             task command, :roles => :db, :only => { :primary => true } do
-              run "#{sudo} service mysqld #{command}"
+              run "#{sudo} service #{mysql_command} #{command}"
             end
           end
         end
@@ -135,11 +139,11 @@ module CapistranoRecipes
           set(:db_host) { db_config[rails_env]["host"] }
           set(:db_name) { db_config[rails_env]["database"] }
         end
-        
+
         def db_config
           @db_config ||= fetch_db_config
         end
-        
+
         def fetch_db_config
           require 'yaml'
           file = capture "cat #{mysql_remote_config_file}"
