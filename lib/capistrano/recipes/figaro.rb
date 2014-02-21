@@ -16,9 +16,11 @@ module CapistranoRecipes
           end
 
           desc 'Download application.yml from remote server'
-          task :download, :roles => :app, :except => { :no_release => true } do
-            download "#{config_path}/application.yml", "config/application.yml", :via => :scp
-          end if agree? "Your local config/application.yml file will be overwritten. Continue?"
+          task :download_application_file, :roles => :app, :except => { :no_release => true } do
+            if agree? "Your local config/application.yml file will be overwritten. Continue?"
+              download "#{config_path}/application.yml", "config/application.yml", :via => :scp
+            end
+          end
 
           desc 'Symlink application.yml to config path'
           task :symlink, :roles => :app, :except => { :no_release => true } do
