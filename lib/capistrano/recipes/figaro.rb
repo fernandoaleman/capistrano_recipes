@@ -8,7 +8,7 @@ module CapistranoRecipes
           task :upload_file, :roles => :app, :except => { :no_release => true } do
             transfer :up, "config/application.yml", "#{config_path}/application.yml", :via => :scp
           end
-          before 'deploy:finalize_update', 'figaro.upload_file'
+          before 'deploy:finalize_update', 'figaro:upload_file'
           after 'deploy:setup' do
             figaro.upload_file if agree? 'Setup application.yml?'
           end
