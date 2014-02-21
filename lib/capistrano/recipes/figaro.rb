@@ -5,18 +5,18 @@ module CapistranoRecipes
 
         namespace :figaro do
           desc 'Upload application.yml to remote server'
-          task :upload, :roles => :app, :except => { :no_release => true } do
+          task :upload_file, :roles => :app, :except => { :no_release => true } do
             transfer :up, "config/application.yml", "#{config_path}/application.yml", :via => :scp
           end
           before 'deploy:finalize_update' do
-            figaro.upload if agree? 'Upload application.yml?'
+            figaro.upload_file if agree? 'Upload application.yml?'
           end
           after 'deploy:setup' do
-            figaro.upload if agree? 'Setup application.yml?'
+            figaro.upload_file if agree? 'Setup application.yml?'
           end
 
           desc 'Download application.yml from remote server'
-          task :download, :roles => :app, :except => { :no_release => true } do
+          task :download_file, :roles => :app, :only => { :primary => true } do
             if agree? "Your local config/application.yml file will be overwritten. Continue?"
               download "#{config_path}/application.yml", "config/application.yml", :via => :scp
             end
