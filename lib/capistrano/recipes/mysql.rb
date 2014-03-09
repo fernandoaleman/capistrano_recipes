@@ -93,7 +93,7 @@ module CapistranoRecipes
           after 'deploy:finalize_update', 'mysql:symlink'
 
           desc 'Populate the database with seed data'
-          task :seed do
+          task :seed, :roles => :db, :only => { :primary => true } do
             run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} db:seed"
           end
           after 'deploy:cold' do
